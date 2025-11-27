@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "ode.h": "c",
-        "glfw3.h": "c"
-    }
-}
