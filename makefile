@@ -1,20 +1,28 @@
 SRC := $(wildcard src/*.c)
-OBJ := $(patsubst src/%.c, build/%.o, $(SRC))
+LIB_SRC := $(filter-out src/main.c, $(SRC))
+LIB_OBJ := $(patsubst src/%.c, build/%.o, $(LIB_SRC))
+MAIN_OBJ := $(patsubst src/%.c, build/%.o, src/main.c)
 
 CFLAGS  := -Iinclude
 LDFLAGS := -lGL -lglfw -lopenal -lode -lm
 
 TARGET := GoldCore
+STATIC := lib$(TARGET).a
 
-all: $(TARGET)
+all: bin/$(TARGET)
+lib: lib/$(STATIC)
 
-$(TARGET): $(OBJ)
+bin/$(TARGET): $(MAIN_OBJ)
 	mkdir -p bin
-	gcc $(OBJ) -o bin/$@ $(LDFLAGS)
+	gcc $(MAIN_OBJ) -Llib -l$(TARGET) -o $@ $(LDFLAGS)
+
+lib/$(STATIC): $(LIB_OBJ)
+	mkdir -p lib
+	ar rcs $@ $(LIB_OBJ)
 
 build/%.o: src/%.c
 	mkdir -p build
 	gcc -c $< $(CFLAGS) -o $@
 
 clean:
-	rm -rf build bin
+	rm -rf build bin lib

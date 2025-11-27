@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "ode.h": "c"
+        "ode.h": "c",
+        "glfw3.h": "c"
     }
 }
